@@ -2,6 +2,7 @@ import os
 import random
 import db
 from dotenv import load_dotenv
+from telegram import ParseMode
 from telegram import Update
 from telegram import ReplyKeyboardMarkup
 from telegram import KeyboardButton
@@ -23,7 +24,7 @@ class Event:
         return f"Название: {self.title}\nОписание: {self.description}"
 
 
-def get_random_event():
+def get_random_event() -> Event:
     events = db.get_all_events()
     random_event = random.choice(events)
     event_obj = Event(random_event[1], random_event[2])
@@ -35,9 +36,10 @@ def get_random_event():
 
 
 def new_event_button_handler(update: Update, context: CallbackContext):
-    reply_markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="новое событие")]])
+    reply_markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="новое событие")]], resize_keyboard=True)
     random_event = get_random_event()
-    update.message.reply_text(text=str(random_event), reply_markup=reply_markup)
+    msg_txt = f"Название: <b>{random_event.title}</b>\nОписание: <i>{random_event.description}</i>"
+    update.message.reply_text(text=msg_txt, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
 
 
 def main():
