@@ -3,6 +3,17 @@ import sqlite3
 __connection = None
 
 
+def log_error(f):
+    def inner(*args, **kwargs):
+        try:
+            f(*args, **kwargs)
+        except Exception as e:
+            print(f"ощибка: {e}")
+            raise e
+
+    return inner
+
+
 def get_connection():
     global __connection
     if __connection is None:
@@ -16,7 +27,7 @@ def create_tables():
     cursor.execute("CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY, title TEXT, description TEXT)")
     connection.commit()
 
-
+@log_error
 def get_all_events():
     connection = get_connection()
     cursor = connection.cursor()
