@@ -27,7 +27,6 @@ def create_tables():
     cursor.execute("CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY, title TEXT, description TEXT)")
     connection.commit()
 
-@log_error
 def get_all_events():
     connection = get_connection()
     cursor = connection.cursor()
